@@ -21,4 +21,6 @@ urlpatterns = [
     path('', include('rideshareapp.urls')),
     path('rideshareapp/', include('rideshareapp.urls')),
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
+    path('accounts/', include('accounts.urls'))
 ]

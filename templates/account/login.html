@@ -1,0 +1,17 @@
+{% load socialaccount %}
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign in</title>
+</head>
+<body>
+  <h1>Very minimalistic Login Page</h1>
+
+  <p>
+      <button onclick="window.location.href='{% provider_login_url 'google' %}'">
+          Sign in with Google
+      </button>
+  </p>
+</body>
+</html>
