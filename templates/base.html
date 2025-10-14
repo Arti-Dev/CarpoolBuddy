@@ -1,0 +1,70 @@
+<!-- used ai to generate basic base.html to modify 
+ AI use: Generated with ChatGPT on 2025-10-14.
+ Prompt: "give me a basic base.html file for my django project"
+ Notes: given code was modified to fit our project design & standards - changed colors, layouts, fonts etc
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Carpool Buddy{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background-color: #dfe2f2;
+        }
+        nav.navbar {
+            background-color: #afb9f6;
+        }
+        nav a.nav-link, nav .navbar-brand {
+            color: rgb(9, 1, 64) !important;
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            margin-top: 40px;
+            background: #f1f1f1;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation bar - will need to modified in the future -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/">Carpool Buddy</a>
+            <div>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- href needs to be updated--> 
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    {% if user.is_authenticated %}
+                        <!-- href needs to be updated--> 
+                        <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
+                        <!-- href needs to be updated--> 
+                        <li class="nav-item"><a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content area -->
+    <div class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+
+    <!-- Footer  - we probably dont need this-->
+    <footer>
+        <p></p>
+    </footer>
+</body>
+</html>
