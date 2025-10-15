@@ -4,7 +4,7 @@
  Notes: given code was modified to fit our project design & standards - changed colors, layouts, fonts etc
 -->
 
-
+{%load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,6 +45,18 @@
                     {% if user.is_authenticated %}
                         <!-- href needs to be updated--> 
                         <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link p-0" href="{% url 'accounts:profile' %}" title="Profile" aria-label="My Profile">
+                              {% if user.profile and user.profile.image %}
+                                <img src="{{ user.profile.image.url }}"
+                                     class="rounded-circle border" width="36" height="36">
+                              {% else %}
+                                <img src="{% static 'default.jpg' %}"
+                                     class="rounded-circle border" width="36" height="36">
+                              {% endif %}
+                            </a>
+                          </li>
+                
                     {% else %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Login</a></li>
                         <!-- href needs to be updated--> 
