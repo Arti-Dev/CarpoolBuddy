@@ -47,6 +47,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'rideshareapp',
+
+    #source used ai:
+    #asked chat why I was getting no profile error - needed to specify AccountsConfig so that signal to create profile on login was run
+    #prompt: why am i getting this ("RelatedObjectDoesNotExist: User has no profile") error
     'accounts.apps.AccountsConfig'
 ]
 
