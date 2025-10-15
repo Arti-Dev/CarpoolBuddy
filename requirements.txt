@@ -11,3 +11,6 @@ django-heroku
 
 django-allauth[socialaccount]
 python-dotenv
+
+#for images
+Pillow
