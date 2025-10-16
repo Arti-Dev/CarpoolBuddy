@@ -11,4 +11,6 @@ def create_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
+    # In case user existed before profiles were a thing
+    Profile.objects.get_or_create(user=instance)
     instance.profile.save()
