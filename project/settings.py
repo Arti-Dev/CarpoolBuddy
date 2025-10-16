@@ -47,6 +47,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'rideshareapp',
+
+    #used chat to fix this line on 10/15/25
+    #needed to specify accountsconfig so that signal to create user object was sent on login
+    #prompt: Why am i getting this error: "RelatedObjectDoesNotExist at /accounts/google/login/callback/ User has no profile."
     'accounts.apps.AccountsConfig'
 ]
 
