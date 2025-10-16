@@ -4,7 +4,12 @@ from django.http import HttpResponse
 
 # SHERRIFF: very basic index page created
 def index(request):
-    return redirect('/accounts/login')
+    if request.user.is_authenticated:
+        #asked chat for this line on 10/15/25
+        #prompt how do i change this to not redirect to accounts/login
+        return render(request, "rideshareapp/home.html", {"user": request.user})
+    else:
+        return redirect('/accounts/login')
 
 def moderator(request):
     if not request.user.is_authenticated:
