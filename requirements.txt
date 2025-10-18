@@ -14,3 +14,7 @@ python-dotenv
 
 #for images
 Pillow
+
+dj-database-url
+psycopg2-binary
+dj-config-url

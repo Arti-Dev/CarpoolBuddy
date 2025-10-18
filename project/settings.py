@@ -13,6 +13,13 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+import psycopg2
+
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+conn = None
+if DATABASE_URL:
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 load_dotenv()
 
@@ -104,6 +111,9 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+import dj_database_url
+if DATABASE_URL: DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 
 # Password validation
