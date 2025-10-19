@@ -8,5 +8,8 @@
       <button onclick="window.location.href='{% provider_login_url 'google' %}'">
           Sign in with Google
       </button>
+      <button onclick="window.location.href='{% provider_login_url 'google' %}?next={% url 'moderator' %}'">
+          Sign in with Google (moderator)
+      </button>
   </p>
 {% endblock %}
