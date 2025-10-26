@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'daphne',
+    'channels',
     'rideshareapp',
 
     #used chat to fix this line on 10/15/25
@@ -60,6 +62,8 @@ INSTALLED_APPS = [
     #prompt: Why am i getting this error: "RelatedObjectDoesNotExist at /accounts/google/login/callback/ User has no profile."
     'accounts.apps.AccountsConfig'
 ]
+
+ASGI_APPLICATION = "myproject.asgi.application"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
