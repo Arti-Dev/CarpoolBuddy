@@ -37,12 +37,16 @@ SECRET_KEY = 'django-insecure-ocydeh5ofpnwv4de&+1&3(d#&!8f6kz8(fdf&zjzbt^ditd=&7
 DEBUG = True
 
 # SHERRIFF: Added both the local host and herokuapp.com here to handled the DisallowedHost error.
-ALLOWED_HOSTS = ['localhost','127.0.0.1','rideshare-b-14-7cf1a7dbfeed.herokuapp.com']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','rideshare-b-14-7cf1a7dbfeed.herokuapp.com',
+                 'https://test-rideshare-cd5589f7107a.herokuapp.com/']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'chat',
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,8 +57,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'daphne',
-    'channels',
     'rideshareapp',
 
     #used chat to fix this line on 10/15/25
@@ -63,7 +65,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig'
 ]
 
-ASGI_APPLICATION = "myproject.asgi.application"
+ASGI_APPLICATION = "project.asgi.application"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
