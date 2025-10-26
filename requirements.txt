@@ -19,3 +19,5 @@ dj-database-url
 psycopg2-binary
 dj-config-url
 channels[daphne]
+channels_redis
+asgiref
