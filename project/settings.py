@@ -38,7 +38,7 @@ DEBUG = True
 
 # SHERRIFF: Added both the local host and herokuapp.com here to handled the DisallowedHost error.
 ALLOWED_HOSTS = ['localhost','127.0.0.1','rideshare-b-14-7cf1a7dbfeed.herokuapp.com',
-                 'https://test-rideshare-cd5589f7107a.herokuapp.com/']
+                 'test-rideshare-cd5589f7107a.herokuapp.com']
 
 
 # Application definition
