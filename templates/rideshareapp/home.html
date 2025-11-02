@@ -6,5 +6,27 @@
 <div class="container">
     <h3>Welcome {{ user.first_name }}!</h3>
     <p><a href="{% url 'moderator' %}">Moderator Page</a></p>
+
+    <hr>
+    <h4>Available Rides</h4>
+
+    <a href="{% url 'posts:post_create' %}" class="btn btn-primary">+ Create a new post</a>
+
+
+    {% if posts %}
+        {% for post in posts %}
+            <div>
+                <p><strong>{{ post.author.username }}</strong></p>
+                <p><b>{{ post.start_location }}</b> to <b>{{ post.end_location }}</b></p>
+                <p>Departure: {{ post.departure_time|date:"M d, g:i a" }}</p>
+                <p>Seats: {{ post.num_riders }}</p>
+                {% if post.description %}
+                    <p>{{ post.description }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No rides posted yet.</p>
+    {% endif %}
 </div>
 {% endblock %}

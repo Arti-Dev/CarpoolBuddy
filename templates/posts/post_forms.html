@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Create Post{% endblock %}
+
+{% block content %}
+  <h2>Create a new ride post</h2>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <!--renders form automatically-->
+    {{ form.as_p }}
+    <button type="submit">Create</button>
+  </form>
+{% endblock %}
