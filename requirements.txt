@@ -18,8 +18,10 @@ Pillow
 dj-database-url
 psycopg2-binary
 dj-config-url
+asgiref
+channels[daphne]
+channels_redis
 
-asgiref==3.10.0
 boto3==1.40.63
 botocore==1.40.63
 django-storages==1.14.6

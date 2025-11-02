@@ -37,12 +37,16 @@ SECRET_KEY = 'django-insecure-ocydeh5ofpnwv4de&+1&3(d#&!8f6kz8(fdf&zjzbt^ditd=&7
 DEBUG = True
 
 # SHERRIFF: Added both the local host and herokuapp.com here to handled the DisallowedHost error.
-ALLOWED_HOSTS = ['localhost','127.0.0.1','rideshare-b-14-7cf1a7dbfeed.herokuapp.com']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','rideshare-b-14-7cf1a7dbfeed.herokuapp.com',
+                 'test-rideshare-cd5589f7107a.herokuapp.com']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'chat',
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -61,6 +65,16 @@ INSTALLED_APPS = [
     #prompt: Why am i getting this error: "RelatedObjectDoesNotExist at /accounts/google/login/callback/ User has no profile."
     'accounts.apps.AccountsConfig'
 ]
+
+ASGI_APPLICATION = "project.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.environ.get("REDIS_URL", ("127.0.0.1", 6379))],
+        },
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
