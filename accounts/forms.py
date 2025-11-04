@@ -10,4 +10,4 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ["bio", "image"]
+        fields = ["bio", "computing_id", "image"]
