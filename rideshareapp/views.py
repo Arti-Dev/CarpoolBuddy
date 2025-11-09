@@ -19,3 +19,6 @@ def moderator(request):
         return render(request, 'rideshareapp/moderator.html')
     else:
         return HttpResponseForbidden("You don't have permission!")
+    
+def admin_dashboard(request):
+    return render(request, "rideshareapp/admin_dashboard.html")
