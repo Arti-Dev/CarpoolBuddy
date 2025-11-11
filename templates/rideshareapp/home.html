@@ -6,28 +6,46 @@
 <div class="container">
     <h3>Welcome {{ user.first_name }}!</h3>
     <p><a href="{% url 'moderator' %}">Moderator Page</a></p>
+    <p><a href="{% url 'chatindex' %}">User Messaging</a></p>
 
     <hr>
     <h4>Available Rides</h4>
 
     <a href="{% url 'posts:post_create' %}" class="btn btn-primary">+ Create a new post</a>
 
+    <br>
+    <br>
 
-    {% if posts %}
-        {% for post in posts %}
-            <div>
-                <p><strong>{{ post.author.username }}</strong></p>
-                <p><b>{{ post.start_location }}</b> to <b>{{ post.end_location }}</b></p>
-                <p>Departure: {{ post.departure_time|date:"M d, g:i a" }}</p>
-                <p>Seats: {{ post.num_riders }}</p>
-                {% if post.description %}
-                    <p>{{ post.description }}</p>
-                {% endif %}
+    <!--asked chat to generate cards to display my posts on 11/11/25, i modified it to show the information i wanted-->
+    <!-- Grid Feed -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% if posts %}
+            {% for post in posts %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">
+                            {{ post.start_location }} to {{ post.end_location }}
+                        </h5>
+                        <p class="card-text mb-2">
+                            <strong>Departure:</strong> {{ post.departure_time|date:"M d, Y h:i A" }}<br>
+                            <strong>Riders:</strong> {{ post.num_riders }}
+                        </p>
+                        {% if post.description %}
+                            <p class="card-text flex-grow-1">{{ post.description|truncatewords:25 }}</p>
+                        {% endif %}
+                        <small class="text-muted mt-auto">
+                            Posted by {{ post.author }} • {{ post.created_at|date:"M d, Y" }}
+                        </small>
+                    </div>
+                </div>
             </div>
-        {% endfor %}
-    {% else %}
-        <p>No rides posted yet.</p>
-    {% endif %}
-    <p><a href="{% url 'chatindex' %}">User Messaging</a></p>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted text-center">No posts yet — be the first to create one!</p>
+        {% endif %}
+    </div>
+
+   
 </div>
 {% endblock %}
