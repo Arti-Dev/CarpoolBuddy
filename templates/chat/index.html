@@ -1,0 +1,50 @@
+<!-- chat/templates/chat/index.html -->
+{% extends "base.html" %}
+{% block title %}Chat Rooms{% endblock %}
+
+{% block content %}
+What chat room would you like to enter?<br>
+<input id="room-name-input" type="text" size="100"><br>
+<input id="room-name-submit" type="button" value="Enter">
+<br><br>
+Or enter another user's computing ID:
+<input id="computing-id" type="text" size="10"><br>
+<input id="computing-id-submit" type="button" value="Enter">
+
+<script>
+    document.querySelector('#room-name-input').focus();
+    document.querySelector('#room-name-input').onkeyup = function(e) {
+        if (e.key === 'Enter') {  // enter, return
+            document.querySelector('#room-name-submit').click();
+        }
+    };
+
+    document.querySelector('#room-name-submit').onclick = function(e) {
+        var roomName = document.querySelector('#room-name-input').value;
+        window.location.pathname = '/chat/' + roomName + '/';
+    };
+</script>
+
+<script>
+    document.querySelector('#computing-id-submit').onclick = async function(e) {
+        const computingID = document.querySelector('#computing-id').value.trim();
+
+        const response = await fetch("{% url 'start-chat' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": "{{ csrf_token }}",
+            },
+            body: new URLSearchParams({computing_id: computingID})
+        });
+
+        const data = await response.json()
+        if (response.ok) {
+            window.location.pathname = '/chat/' + data.room_name + '/'
+        } else {
+            alert(data.error || "An error occurred.")
+        }
+    }
+
+</script>
+{% endblock %}

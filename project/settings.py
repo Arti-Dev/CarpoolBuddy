@@ -37,12 +37,16 @@ SECRET_KEY = 'django-insecure-ocydeh5ofpnwv4de&+1&3(d#&!8f6kz8(fdf&zjzbt^ditd=&7
 DEBUG = True
 
 # SHERRIFF: Added both the local host and herokuapp.com here to handled the DisallowedHost error.
-ALLOWED_HOSTS = ['localhost','127.0.0.1','rideshare-b-14-7cf1a7dbfeed.herokuapp.com']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','rideshare-b-14-7cf1a7dbfeed.herokuapp.com',
+                 'test-rideshare-cd5589f7107a.herokuapp.com']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'chat',
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,6 +58,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'rideshareapp',
+    'storages',
 
     #used chat to fix this line on 10/15/25
     #needed to specify accountsconfig so that signal to create user object was sent on login
@@ -62,6 +67,16 @@ INSTALLED_APPS = [
 
     'posts'
 ]
+
+ASGI_APPLICATION = "project.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.environ.get("REDIS_URL", ("127.0.0.1", 6379))],
+        },
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -155,11 +170,32 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 # SHERRIFF: Added the static_root variable here to fix an erorr with static files not being found
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME", "us-east-2")
+AWS_S3_SIGNATURE_VERSION = "s3v4"
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+AWS_S3_CUSTOM_DOMAIN = os.environ.get(
+    "AWS_S3_CUSTOM_DOMAIN",
+    f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+)
+
+STORAGES = {
+    "default": {        
+        "BACKEND": "project.storage_backend.MediaStorage",
+    },
+    "staticfiles": {    
+        "BACKEND": "project.storage_backend.StaticStorage",
+    },
+}
+STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
+MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
 
 
 # Default primary key field type

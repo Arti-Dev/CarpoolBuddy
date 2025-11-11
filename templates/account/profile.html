@@ -7,6 +7,7 @@
     <div class="media-body">
     <h3>Name: {{ user.first_name }}</h3>
     <h4>Groups: {{ user.profile.get_groups }}</h4>
+    <p>Computing ID: {{  user.profile.computing_id }}</p>
     <p><strong>Email:</strong> {{ user.email }}</p>
     <p><strong>Bio:</strong> {{ user.profile.bio }}</p>
     <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary">Edit Profile</a>
