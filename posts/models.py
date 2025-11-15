@@ -15,3 +15,8 @@ class Post(models.Model):
 
     def __str__(self):
         return f"{self.author.username}: {self.start_location} to {self.end_location} at {self.departure_time.strftime('%b %d %I:%M %p')}"
+    
+    @property
+    def author_display_name(self):
+        return self.author.profile.get_display_name()
+

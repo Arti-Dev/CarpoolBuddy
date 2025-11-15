@@ -35,7 +35,7 @@
                             <p class="card-text flex-grow-1">{{ post.description|truncatewords:25 }}</p>
                         {% endif %}
                         <small class="text-muted mt-auto">
-                            Posted by {{ post.author }} • {{ post.created_at|date:"M d, Y" }}
+                            Posted by {{ post.author_display_name }} on {{ post.created_at|date:"M d, Y" }}
                         </small>
                     </div>
                 </div>
