@@ -6,8 +6,13 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ["first_name", "last_name", "email"]
+        widgets = {
+            "first_name": forms.TextInput(attrs={"disabled": True}),
+            "last_name": forms.TextInput(attrs={"disabled": True}),
+            "email": forms.EmailInput(),
+        }
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ["bio", "computing_id", "image"]
+        fields = ["nickname","sustainability_interests", "bio", "computing_id", "image"]

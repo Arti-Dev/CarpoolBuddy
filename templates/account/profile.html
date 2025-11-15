@@ -6,10 +6,12 @@
     <img class="rounded-circle account-img" src="{{ user.profile.image.url }}"  width="155" height="155">
     <div class="media-body">
     <h3>Name: {{ user.first_name }}</h3>
+    <h4>Nickname: {{ user.profile.get_display_name }}</h4>
     <h4>Groups: {{ user.profile.get_groups }}</h4>
     <p>Computing ID: {{  user.profile.computing_id }}</p>
     <p><strong>Email:</strong> {{ user.email }}</p>
     <p><strong>Bio:</strong> {{ user.profile.bio }}</p>
+    <p><strong>Sustainability Interests:</strong> {{ user.profile.sustainability_interests }}</p>
     <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary">Edit Profile</a>
 </div>
 </div>
