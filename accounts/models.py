@@ -8,7 +8,7 @@ class Profile(models.Model):
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
     # Spring 5 Requirements Change addition
     nickname = models.CharField(max_length=20, blank=True, null=True)
-    sustainability_interests = models.TextField(blank=True)
+    sustainability_interests = models.TextField()
 
     def __str__(self):
         return self.user.username
