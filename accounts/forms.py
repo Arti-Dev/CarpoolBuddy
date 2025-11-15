@@ -5,9 +5,14 @@ from .models import Profile
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "email"]
+        fields = ['first_name', 'last_name', 'email']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control bg-light'}),
+            'last_name': forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control bg-light'}),
+        }
+
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ["bio", "computing_id", "image"]
+        fields = ["nickname","sustainability_interests","bio", "computing_id", "image"]
