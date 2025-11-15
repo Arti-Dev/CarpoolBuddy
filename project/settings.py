@@ -65,8 +65,7 @@ INSTALLED_APPS = [
     #prompt: Why am i getting this error: "RelatedObjectDoesNotExist at /accounts/google/login/callback/ User has no profile."
     'accounts.apps.AccountsConfig',
 
-    'posts',
-    "django_extensions"
+    'posts'
 ]
 
 ASGI_APPLICATION = "project.asgi.application"
