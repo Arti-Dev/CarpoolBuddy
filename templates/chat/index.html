@@ -1,31 +1,50 @@
 <!-- chat/templates/chat/index.html -->
 {% extends "base.html" %}
+{% block extra_style %}
+    <style>
+    .user-item {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 5px;
+        background-color: #e0e0e0;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .user-item:hover {
+        background-color: #d0d0d0;
+    }
+    </style>
+{% endblock %}
 {% block title %}Chat Rooms{% endblock %}
 
 {% block content %}
-What chat room would you like to enter?<br>
-<input id="room-name-input" type="text" size="100"><br>
-<input id="room-name-submit" type="button" value="Enter">
+<h1>Chat Rooms</h1>
+<br>
+{% for room in user.profile.get_accessible_rooms %}
+    <button onclick="window.location.href='{% url 'room' room_id=room.id %}'">{{ room.title }}</button><br>
+{% empty %}
+    <li>No rooms</li>
+{% endfor %}
 <br><br>
-Or enter another user's computing ID:
+Or start a chat by entering someone else's computing ID:<br>
 <input id="computing-id" type="text" size="10"><br>
 <input id="computing-id-submit" type="button" value="Enter">
-
+<br><br>
+Or create a group conversation:<br>
+<input id="gc-computing-id" type="text" size="10"><br>
+<input id="add-user" type="button"  value="Add User"><br>
+<div class="gc-id-list" id="gc-id-list">
+    <!-- List of added computing IDs will appear here -->
+</div>
+<input id="create-gc" type="button" value="Create Group Chat">
 <script>
-    document.querySelector('#room-name-input').focus();
-    document.querySelector('#room-name-input').onkeyup = function(e) {
+    document.querySelector('#computing-id').focus();
+    document.querySelector('#computing-id').onkeyup = function(e) {
         if (e.key === 'Enter') {  // enter, return
-            document.querySelector('#room-name-submit').click();
+            document.querySelector('#computing-id-submit').click();
         }
     };
 
-    document.querySelector('#room-name-submit').onclick = function(e) {
-        var roomName = document.querySelector('#room-name-input').value;
-        window.location.pathname = '/chat/' + roomName + '/';
-    };
-</script>
-
-<script>
     document.querySelector('#computing-id-submit').onclick = async function(e) {
         const computingID = document.querySelector('#computing-id').value.trim();
 
@@ -40,11 +59,67 @@ Or enter another user's computing ID:
 
         const data = await response.json()
         if (response.ok) {
-            window.location.pathname = '/chat/' + data.room_name + '/'
+            window.location.pathname = '/chat/' + data.room_id + '/'
         } else {
             alert(data.error || "An error occurred.")
         }
     }
+</script>
+<script>
+    // ChatGPT generated
+    const addUserBtn = document.getElementById('add-user');
+    const createGCBtn = document.getElementById('create-gc');
+    const gcInput = document.getElementById('gc-computing-id');
+    const gcList = document.getElementById('gc-id-list');
 
+    let users = [];
+
+    function renderUsers() {
+        // Clear
+        gcList.innerHTML = '';
+        users.forEach((user, index) => {
+            const userDiv = document.createElement('div');
+            userDiv.className = 'user-item';
+            userDiv.textContent = user + ' ✖';
+            userDiv.onclick = () => {
+                users.splice(index, 1); // remove user on click
+                renderUsers();
+            };
+            gcList.appendChild(userDiv);
+        });
+    }
+
+    // Add user
+    addUserBtn.addEventListener('click', () => {
+        const username = gcInput.value.trim();
+        if (username && !users.includes(username)) {
+            users.push(username);
+            renderUsers();
+            gcInput.value = '';
+            gcInput.focus();
+        }
+    });
+
+    createGCBtn.onclick = async function(e) {
+        if (users.length === 0) {
+            alert('Add at least one user to create a group chat.');
+            return;
+        }
+        const response = await fetch("{% url 'start-group-chat' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": "{{ csrf_token }}",
+            },
+            body: JSON.stringify({computing_ids: users})
+        });
+
+        const data = await response.json()
+        if (response.ok) {
+            window.location.pathname = '/chat/' + data.room_id + '/'
+        } else {
+            alert(data.error || "An error occurred.")
+        }
+    }
 </script>
 {% endblock %}
