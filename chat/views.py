@@ -1,6 +1,8 @@
+import json
+
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseBadRequest, JsonResponse
-from django.shortcuts import render
+from django.http import HttpResponseBadRequest, JsonResponse, HttpResponseForbidden, Http404
+from django.shortcuts import render, get_object_or_404
 
 from accounts.models import Profile
 from chat.models import ChatRoom, ChatAccess
@@ -11,8 +13,21 @@ from chat.models import ChatRoom, ChatAccess
 def index(request):
     return render(request, "chat/index.html")
 
-def room(request, room_name):
-    return render(request, "chat/room.html", {"room_name": room_name})
+def room_view(request, room_id):
+    try:
+        room_id = int(room_id)
+    except ValueError:
+        raise Http404("Invalid room ID")
+    room = get_object_or_404(ChatRoom, id=room_id)
+
+    user_profile = request.user.profile
+    has_access = ChatAccess.objects.filter(user=user_profile, room=room).exists()
+    if not has_access:
+        return HttpResponseForbidden("You do not have access to this room.")
+
+    return render(request, "chat/room.html",
+                  {"room_id": room.id,
+                   "room_title": room.title})
 
 def start_chat(request):
     if request.method != "POST":
@@ -29,19 +44,43 @@ def start_chat(request):
 
     user_profile = request.user.profile
 
-    existing_rooms = ChatRoom.objects.filter(
+    existing_rooms = (ChatRoom.objects.filter(
         chataccess__user=user_profile
     ).filter(
         chataccess__user=target_profile
-    ).distinct()
+    ).filter(
+        dm=True
+    ).distinct())
 
     if existing_rooms.exists():
         room = existing_rooms.first()
     else:
-        title = f"{target_profile.user.username}{user_profile.user.username}"
-        room = ChatRoom.objects.create(title=title)
+        title = f"Conversation between {target_profile.user.username} and {user_profile.user.username}"
+        room = ChatRoom.objects.create(title=title, dm=True)
         ChatAccess.objects.create(user=user_profile, room=room)
         ChatAccess.objects.create(user=target_profile, room=room)
 
-    # todo should return room id
-    return JsonResponse({"room_name": room.title})
+    return JsonResponse({"room_id": room.id})
+
+def start_group_chat(request):
+    if request.method != "POST":
+        return HttpResponseBadRequest("Invalid request")
+    # caution - different loading method than start_chat!
+    data = json.loads(request.body)
+    computing_ids = data.get("computing_ids", [])
+    failed_ids = []
+    target_profiles = [request.user.profile]
+    for id in computing_ids:
+        try:
+            target_profile = Profile.objects.get(computing_id=id)
+            target_profiles.append(target_profile)
+        except Profile.DoesNotExist:
+            failed_ids.append(id)
+            continue
+
+    title = "Group Chat: " + ", ".join([p.user.username for p in target_profiles])
+    room = ChatRoom.objects.create(title=title, dm=False)
+    for profile in target_profiles:
+        ChatAccess.objects.create(user=profile, room=room)
+    return JsonResponse({"room_id": room.id, "failed_ids": failed_ids})
+
