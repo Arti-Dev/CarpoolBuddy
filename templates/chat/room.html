@@ -92,7 +92,7 @@
         document.querySelector('#chat-message-submit').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
             let message = messageInputDom.value;
-            const username = "{{ user.username }}";
+            const username = "{{ user.profile.get_display_name }}";
             message = username + ': ' + message;
             chatSocket.send(JSON.stringify({
                 'message': message

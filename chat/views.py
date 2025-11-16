@@ -55,7 +55,7 @@ def start_chat(request):
     if existing_rooms.exists():
         room = existing_rooms.first()
     else:
-        title = f"Conversation between {target_profile.user.username} and {user_profile.user.username}"
+        title = f"Conversation between {target_profile.get_display_name()} and {user_profile.get_display_name()}"
         room = ChatRoom.objects.create(title=title, dm=True)
         ChatAccess.objects.create(user=user_profile, room=room)
         ChatAccess.objects.create(user=target_profile, room=room)
@@ -78,7 +78,7 @@ def start_group_chat(request):
             failed_ids.append(id)
             continue
 
-    title = "Group Chat: " + ", ".join([p.user.username for p in target_profiles])
+    title = "Group Chat: " + ", ".join([p.user.profile.get_display_name() for p in target_profiles])
     room = ChatRoom.objects.create(title=title, dm=False)
     for profile in target_profiles:
         ChatAccess.objects.create(user=profile, room=room)
