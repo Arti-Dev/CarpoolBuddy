@@ -69,11 +69,16 @@ INSTALLED_APPS = [
 ]
 
 ASGI_APPLICATION = "project.asgi.application"
+redis_url = os.environ.get("REDIS_URL")
+if not redis_url: redis_url = "redis://127.0.0.1:6379"
+else: redis_url += "?ssl_cert_reqs=none"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [os.environ.get("REDIS_URL", ("127.0.0.1", 6379))],
+            "hosts": [{
+                "address": redis_url,
+            }],
         },
     },
 }
@@ -88,6 +93,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
 ]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 ROOT_URLCONF = 'project.urls'
 

@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from chat.models import ChatRoom
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True)
@@ -18,6 +21,10 @@ class Profile(models.Model):
         groups = self.user.groups.values_list('name', flat=True)
         return ", ".join(groups)
 
+    def get_accessible_rooms(self):
+        rooms = ChatRoom.objects.filter(chataccess__user=self.user.profile).distinct()
+        return [{"id": room.id, "title": room.title} for room in rooms]
+    
     def get_display_name(self):
         if self.nickname and self.nickname.strip():
             return self.nickname
