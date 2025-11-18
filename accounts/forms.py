@@ -7,10 +7,18 @@ class UserUpdateForm(forms.ModelForm):
         model = User
         fields = ["first_name", "last_name", "email"]
         widgets = {
-            "first_name": forms.TextInput(attrs={"disabled": True}),
-            "last_name": forms.TextInput(attrs={"disabled": True}),
-            "email": forms.EmailInput(),
-        }
+            'first_name': forms.TextInput(attrs={
+            'readonly': 'readonly',
+            'class': 'form-control text-muted',  # light grey text
+            }),
+            'last_name': forms.TextInput(attrs={
+                'readonly': 'readonly',
+                'class': 'form-control text-muted',  # light grey text
+            }),
+            'email': forms.EmailInput(attrs={
+                'readonly': 'readonly',
+                'class': 'form-control text-muted',  # light grey text
+            })}
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
