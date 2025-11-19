@@ -22,3 +22,8 @@ def moderator(request):
         return render(request, 'rideshareapp/moderator.html')
     else:
         return HttpResponseForbidden("You don't have permission!")
+def cio_dashboard(request):
+    #if not request.user.is_authenticated:
+    #    return redirect('/accounts/login')
+    cioName= "Placeholder name"
+    return render(request, "rideshareapp/cio_dashboard.html", { "cio_name": cioName })
