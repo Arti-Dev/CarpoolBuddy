@@ -2,27 +2,92 @@
 
 {% block title %}Edit Profile{% endblock %}
 
+{% block extra_style %}
+<style>
+    /* Headings */
+    h2.page-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+
+    h5.section-title {
+        font-size: 1.2rem;
+        font-weight: 500;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    /* Form inputs */
+    .form-control {
+        font-size: 1rem;
+    }
+
+    /* Buttons */
+    .btn {
+        font-size: 1rem;
+    }
+
+    /* Form card spacing */
+    .form-card {
+        padding: 2rem;
+        border-radius: 0.5rem;
+    }
+
+    /* Alert messages spacing */
+    .alert {
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+
 {% block content %}
 <div class="container mt-4">
     <h2 class="mb-4 text-primary">Edit Profile</h2>
     {% if messages %}
-        <div class="alert alert-info">
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-        </div>
+        {% for message in messages %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
     {% endif %}
 
-    <form method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm bg-white rounded">
-        {% csrf_token %}
-        <h5 class="text-secondary">Personal Information:</h5>
-        {{ user_update_form.as_p }}
-
-        {{ profile_form.as_p }}
-        <div class="mt-3">
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
+    <div class="card shadow-sm form-card bg-white">
+        <form method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm bg-white rounded">
+            {% csrf_token %}
+            <!-- Personal Information Section -->
+            <h5 class="section-title">Personal Information</h5>
+            {% for field in user_update_form %}
+                <div class="mb-3">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <!-- Profile Details Section -->
+            <h5 class="section-title">Profile Details</h5>
+            {% for field in profile_form %}
+                <div class="mb-3">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <!-- Buttons -->
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
