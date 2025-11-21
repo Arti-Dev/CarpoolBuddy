@@ -29,8 +29,8 @@ def admin_dashboard(request):
 def admin_add_user(request):
     return render(request, "rideshareapp/admin_add_user.html")
 
-def admin_create_event(request):
-    return render(request, "rideshareapp/admin_create_event.html")
+def admin_create_cio(request):
+    return render(request, "rideshareapp/admin_create_cio.html")
 
 def admin_my_groups(request):
     return render(request, "rideshareapp/admin_my_groups.html")
