@@ -34,7 +34,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ocydeh5ofpnwv4de&+1&3(d#&!8f6kz8(fdf&zjzbt^ditd=&7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("debug", False)
 
 # SHERRIFF: Added both the local host and herokuapp.com here to handled the DisallowedHost error.
 ALLOWED_HOSTS = ['localhost','127.0.0.1','rideshare-b-14-7cf1a7dbfeed.herokuapp.com',
