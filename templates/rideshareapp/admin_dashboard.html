@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('created') === '1') {
+      alert("CIO successfully created!");
+  }
+</script>
+
+  <h1>Admin Dashboard</h1>
+
+  <p>
+      Welcome to your Admin Dashboard!
+  </p>
+
+  <p>
+    <button onclick="alert('Add User clicked')">
+        Add User
+    </button>
+
+    <button onclick="window.location.href='{% url 'admin-create-cio' %}'">
+      Create CIO
+  </button>
+
+
+    <button onclick="alert('My Groups clicked')">
+      My Groups
+  </button>
+</p>
+
+{% endblock %}

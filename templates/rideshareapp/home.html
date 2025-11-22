@@ -7,11 +7,26 @@
     <h3>Welcome {{ user.profile.get_display_name }}!</h3>
     <p><a href="{% url 'moderator' %}">Moderator Page</a></p>
     <p><a href="{% url 'chatindex' %}">User Messaging</a></p>
+    <p><a href="{% url 'admin-dashboard' %}">Admin Dashboard</a></p>
 
     <hr>
     <h4>Available Rides</h4>
 
     <a href="{% url 'posts:post_create' %}" class="btn btn-primary">+ Create a new post</a>
+
+    <!-- Join CIO section -->
+<form method="get" action="{% url 'cio_dashboard' %}">
+    <label for="cio-select"><strong>Join CIO:</strong></label>
+    <select id="cio-select" name="cio_id">
+      {% for cio in cios %}
+        <option value="{{ cio.id }}">{{ cio.name }}</option>
+      {% empty %}
+        <option disabled>No CIOs available yet.</option>
+      {% endfor %}
+    </select>
+  
+    <button type="submit">Go</button>
+  </form>
 
     <br>
     <br>

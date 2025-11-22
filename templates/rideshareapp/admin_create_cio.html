@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Create CIO</h1>
+  <form method="post">
+    {% csrf_token %}
+
+    <p>
+      {{ form.name.label_tag }}
+      {{ form.name }}
+    </p>
+
+    <p>
+      {{ form.placeholder_names.label_tag }}
+      {{ form.placeholder_names }}
+      <small class="form-text text-muted">
+        {{ form.placeholder_names.help_text }}
+      </small>
+    </p>
+
+    <button type="submit">Create CIO</button>
+  </form>
+{% endblock %}

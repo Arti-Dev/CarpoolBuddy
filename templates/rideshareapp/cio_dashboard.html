@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>CIO Dashboard</h1>
+
+  {% if cio %}
+  <h4>Welcome to: <strong>{{ cio.name }}</strong></h4>
+
+    <h3>Users in this CIO</h3>
+    <ul>
+      {% for member in placeholder_members %}
+        <li>{{ member.name }}</li>
+      {% empty %}
+        <li>No users have been added yet.</li>
+      {% endfor %}
+    </ul>
+
+  {% else %}
+    <p>No CIO selected. Please go back and choose one from the home page.</p>
+  {% endif %}
+{% endblock %}
