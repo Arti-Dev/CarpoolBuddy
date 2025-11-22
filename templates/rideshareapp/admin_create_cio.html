@@ -2,5 +2,22 @@
 
 {% block content %}
   <h1>Create CIO</h1>
-  <p></p>
+  <form method="post">
+    {% csrf_token %}
+
+    <p>
+      {{ form.name.label_tag }}
+      {{ form.name }}
+    </p>
+
+    <p>
+      {{ form.initial_member_name.label_tag }}
+      {{ form.initial_member_name }}
+      {% if form.initial_member_name.help_text %}
+        <br><small>{{ form.initial_member_name.help_text }}</small>
+      {% endif %}
+    </p>
+
+    <button type="submit">Create CIO</button>
+  </form>
 {% endblock %}
