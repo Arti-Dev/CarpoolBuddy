@@ -2,6 +2,9 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
 from posts.models import Post
+from django.contrib import messages
+from .forms import CIOForm
+from .models import CIO, CIOPlaceholderMember
 
 
 # SHERRIFF: very basic index page created
@@ -29,8 +32,16 @@ def admin_dashboard(request):
 def admin_add_user(request):
     return render(request, "rideshareapp/admin_add_user.html")
 
-def admin_create_cio(request):
-    return render(request, "rideshareapp/admin_create_cio.html")
-
 def admin_my_groups(request):
     return render(request, "rideshareapp/admin_my_groups.html")
+
+def admin_create_cio(request):
+    if request.method == 'POST':
+        form = CIOForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/rideshareapp/admin-dashboard/?created=1')
+    else:
+        form = CIOForm()
+
+    return render(request, 'rideshareapp/admin_create_cio.html', {'form': form})
