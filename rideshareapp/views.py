@@ -45,3 +45,8 @@ def admin_create_cio(request):
         form = CIOForm()
 
     return render(request, 'rideshareapp/admin_create_cio.html', {'form': form})
+def cio_dashboard(request):
+    #if not request.user.is_authenticated:
+    #    return redirect('/accounts/login')
+    cioName= "Placeholder name"
+    return render(request, "rideshareapp/cio_dashboard.html", { "cio_name": cioName })
