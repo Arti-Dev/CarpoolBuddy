@@ -11,11 +11,11 @@
     </p>
 
     <p>
-      {{ form.initial_member_name.label_tag }}
-      {{ form.initial_member_name }}
-      {% if form.initial_member_name.help_text %}
-        <br><small>{{ form.initial_member_name.help_text }}</small>
-      {% endif %}
+      {{ form.placeholder_names.label_tag }}
+      {{ form.placeholder_names }}
+      <small class="form-text text-muted">
+        {{ form.placeholder_names.help_text }}
+      </small>
     </p>
 
     <button type="submit">Create CIO</button>
