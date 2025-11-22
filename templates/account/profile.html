@@ -13,7 +13,44 @@
     <p><strong>Bio:</strong> {{ user.profile.bio }}</p>
     <p><strong>Sustainability Interests:</strong> {{ user.profile.sustainability_interests }}</p>
     <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary">Edit Profile</a>
+
+
 </div>
 </div>
 </div>
+
+<br>
+
+<h3>My posts</h3>
+
+<!--copied from home.html-->
+ <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% if posts %}
+            {% for post in posts %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">
+                            {{ post.start_location }} to {{ post.end_location }}
+                        </h5>
+                        <p class="card-text mb-2">
+                            <strong>Departure:</strong> {{ post.departure_time|date:"M d, Y h:i A" }}<br>
+                            <strong>Riders:</strong> {{ post.num_riders }}
+                        </p>
+                        {% if post.description %}
+                            <p class="card-text flex-grow-1">{{ post.description|truncatewords:25 }}</p>
+                        {% endif %}
+                        <small class="text-muted mt-auto">
+                            Posted by {{ post.author_display_name }} on {{ post.created_at|date:"M d, Y" }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted text-center">No posts yet — be the first to create one!</p>
+        {% endif %}
+    </div>
+
+   
 {% endblock %}

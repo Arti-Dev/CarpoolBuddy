@@ -34,13 +34,7 @@ def start_chat(request):
         return HttpResponseBadRequest("Invalid request")
 
     target_id = request.POST.get("computing_id", "").strip()
-    if not target_id:
-        return HttpResponseBadRequest("No computing ID provided")
-
-    try:
-        target_profile = Profile.objects.get(computing_id=target_id)
-    except Profile.DoesNotExist:
-        return JsonResponse({"error": f"Could not find a user by computing id {target_id}"})
+    target_profile = Profile.objects.get(computing_id=target_id)
 
     user_profile = request.user.profile
 
@@ -83,4 +77,19 @@ def start_group_chat(request):
     for profile in target_profiles:
         ChatAccess.objects.create(user=profile, room=room)
     return JsonResponse({"room_id": room.id, "failed_ids": failed_ids})
+
+def validate_other_user(request):
+    computing_id = request.POST.get("computing_id", "").strip()
+    current_user_id = request.user.profile.computing_id
+
+    if computing_id == current_user_id:
+        return JsonResponse({"valid": False, "error": "That's you, silly!"}, status=400)
+    if not computing_id:
+        return JsonResponse({"valid": False, "error": "No computing ID provided"}, status=400)
+
+    exists = Profile.objects.filter(computing_id=computing_id).exists()
+    if exists:
+        return JsonResponse({"valid": True})
+    else:
+        return JsonResponse({"valid": False, "error": f"Could not find a user by computing id {computing_id}"}, status=400)
 

@@ -3,10 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import UserUpdateForm, ProfileUpdateForm
+from posts.models import Post
 
 @login_required
 def profile(request):
-    return render(request, 'account/profile.html')
+    #add posts so that a users posts can be seen on profile page
+    posts = Post.objects.filter(author=request.user).order_by('-created_at')
+    return render(request, 'account/profile.html', {"posts":posts})
 @login_required
 def profile_edit(request):
     if request.method == "POST":
