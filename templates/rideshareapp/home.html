@@ -55,6 +55,10 @@
                             <p class="card-text flex-grow-1">{{ post.description|truncatewords:25 }}</p>
                         {% endif %}
                         <small class="text-muted mt-auto">
+                            <!--asked chat to write me code that would add the user's profile photo, modified to reflect our URLS on 12/8/25-->
+                            {% if post.author.profile.image %}
+                                <img src="{{ post.author.profile.image.url }}" alt="Profile photo" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; margin-right: 6px;">
+                            {% endif %}
                             Posted by {{ post.author_display_name }} on {{ post.created_at|date:"M d, Y" }}
                         </small>
                     </div>
