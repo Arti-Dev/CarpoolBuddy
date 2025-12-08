@@ -13,9 +13,27 @@ def index(request):
     if request.user.is_authenticated:
         #gets posts in order
         posts = Post.objects.all().order_by('-created_at')
+        cios = CIO.objects.all().order_by('-id')
+
+        #filter the posts if need to filter
+        start = request.GET.get("start")
+        end = request.GET.get("end")
+        date = request.GET.get("date")
+
+        if start:
+            posts = posts.filter(start_location__icontains=start)
+
+        if end:
+            posts = posts.filter(end_location__icontains=end)
+
+        #asked chat to debug the date filtering on 12/8/25, needed parse_date so that string is converted to date object
+        if date:
+            parsed_date = parse_date(date)
+            if parsed_date:
+                posts = posts.filter(departure_time__date=parsed_date)
+
         #asked chat for this line on 10/15/25
         #prompt how do i change this to not redirect to accounts/login
-        cios = CIO.objects.all().order_by('-id')
         return render(request, "rideshareapp/home.html", {"user": request.user, "posts":posts, "cios":cios,})
     else:
         return redirect('/accounts/login')

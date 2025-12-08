@@ -31,6 +31,33 @@
     <br>
     <br>
 
+
+    <!--asked chat to generate a search bar that would match my previous styling of my homepage on 12/8/25-->
+    <form method="GET" class="row g-2 mb-4">
+
+        <div class="col-md-4">
+            <input type="text" name="start" class="form-control"
+               placeholder="Start location"
+               value="{{ request.GET.start }}">
+        </div>
+
+        <div class="col-md-4">
+            <input type="text" name="end" class="form-control"
+               placeholder="End location"
+               value="{{ request.GET.end }}">
+        </div>
+
+        <div class="col-md-4">
+            <input type="date" name="date" class="form-control"
+               value="{{ request.GET.date }}">
+        </div>
+
+        <div class="col-12 mt-2">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+
+    </form>
+
     <!--asked chat to generate cards to display my posts on 11/11/25, i modified it to show the information i wanted-->
     <!-- Grid Feed -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
