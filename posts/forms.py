@@ -5,7 +5,7 @@ from .models import Post
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['start_location', 'end_location', 'departure_time', 'num_riders', 'description']
+        fields = ['start_location', 'end_location', 'departure_time', 'num_riders', 'description','photo']
         widgets = {
             'start_location': forms.TextInput(attrs={'placeholder': 'Where are you starting from?'}),
             'end_location': forms.TextInput(attrs={'placeholder': 'Where are you going?'}),

@@ -8,6 +8,7 @@ class Post(models.Model):
     end_location = models.CharField(max_length=100)
     departure_time = models.DateTimeField()
     num_riders = models.PositiveIntegerField(default=1)
+    photo = models.ImageField(upload_to="post_photos/", null=True, blank=True)
 
     description = models.TextField(blank=True)
     
