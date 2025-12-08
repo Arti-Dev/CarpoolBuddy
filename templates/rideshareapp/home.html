@@ -66,7 +66,7 @@
             <div class="col">
                 <div class="card h-100 shadow-sm">
 
-                    {% if post.photo %}
+                    {% if post.can_view_photo_user %}
                         <img src="{{ post.photo.url }}" class="card-img-top" alt="Post photo">
                     {% endif %}
                     
@@ -80,6 +80,9 @@
                         </p>
                         {% if post.description %}
                             <p class="card-text flex-grow-1">{{ post.description|truncatewords:25 }}</p>
+                        {% endif %}
+                        {% if post.incentive %}
+                            <p class="card-text flex-grow-1">{{ post.incentive|truncatewords:25 }}</p>
                         {% endif %}
                         <small class="text-muted mt-auto">
                             <!--asked chat to write me code that would add the user's profile photo, modified to reflect our URLS on 12/8/25-->

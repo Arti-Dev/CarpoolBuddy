@@ -31,6 +31,11 @@ def index(request):
             parsed_date = parse_date(date)
             if parsed_date:
                 posts = posts.filter(departure_time__date=parsed_date)
+        # asked chat how to implement photo visibility so that it checks whether or not users have acess to view photo on 12/8/25
+        # gave me the following loop to add
+        for p in posts:
+            p.can_view_photo_user = p.can_view_photo(request.user)
+
 
         #asked chat for this line on 10/15/25
         #prompt how do i change this to not redirect to accounts/login
