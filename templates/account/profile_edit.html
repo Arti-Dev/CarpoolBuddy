@@ -18,22 +18,26 @@
         margin-bottom: 0.75rem;
     }
 
-    /* Form inputs */
-    .form-control {
-        font-size: 1rem;
-    }
-
-    /* Buttons */
-    .btn {
-        font-size: 1rem;
-    }
-
     /* Form card spacing */
     .form-card {
         padding: 2rem;
         border-radius: 0.5rem;
     }
-
+    /* Make label above input nicely spaced */
+    .form-group label {
+        font-weight: 500;
+        margin-bottom: 0.3rem;
+        display: block;
+    }
+    .form-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    .btn {
+        padding-top: 0.45rem;
+        padding-bottom: 0.45rem;
+    }
     /* Alert messages spacing */
     .alert {
         margin-bottom: 1.5rem;
@@ -56,36 +60,76 @@
             {% csrf_token %}
             <!-- Personal Information Section -->
             <h5 class="section-title">Personal Information</h5>
-            {% for field in user_update_form %}
-                <div class="mb-3">
-                    {{ field.label_tag }}
-                    {{ field }}
-                    {% if field.help_text %}
-                        <small class="form-text text-muted">{{ field.help_text }}</small>
-                    {% endif %}
-                    {% for error in field.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                </div>
-            {% endfor %}
+            <!-- moved computing id first -->
+            <div class="form-group mb-3">
+                {{ user_update_form.computing_id.label_tag }}
+                {{ user_update_form.computing_id }}
+                {% for error in user_update_form.computing_id.errors %}
+                <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
             <!-- Profile Details Section -->
-            <h5 class="section-title">Profile Details</h5>
-            {% for field in profile_form %}
-                <div class="mb-3">
-                    {{ field.label_tag }}
-                    {{ field }}
-                    {% if field.help_text %}
-                    <small class="form-text text-muted">{{ field.help_text }}</small>
-                    {% endif %}
-                    {% for error in field.errors %}
-                        <div class="text-danger">{{ error }}</div>
-                    {% endfor %}
-                </div>
+
+            {% for field in user_update_form %}
+            {% if field.name != "computing_id" %}
+            <div class="mb-3">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
             {% endfor %}
+
+
+            <!-- All remaining profile fields -->
+            {% for field in profile_form %}
+            {% if field.name != "bio" and field.name != "sustainability_interests" %}
+            <div class="form-group mb-3">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endfor %}
+
+            <!-- Put BIO first -->
+            <div class="form-group mb-3">
+                {{ profile_form.bio.label_tag }}
+                {{ profile_form.bio }}
+                {% for error in profile_form.bio.errors %}
+                <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <!-- Then sustainability interests -->
+            <div class="form-group mb-3">
+                {{ profile_form.sustainability_interests.label_tag }}
+                {{ profile_form.sustainability_interests }}
+                {% for error in profile_form.sustainability_interests.errors %}
+                <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+
+
             <!-- Buttons -->
-            <div class="mt-3">
+            <div class="form-buttons">
                 <button type="submit" class="btn btn-primary">Submit</button>
-                <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">Cancel</a>
+                <button type="button"
+                        onclick="window.location.href='{% url 'accounts:profile' %}'"
+                        class="btn btn-secondary">
+                    Cancel
+                </button>
             </div>
         </form>
     </div>
