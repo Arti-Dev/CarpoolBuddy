@@ -1,7 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.shortcuts import redirect
-from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.utils.dateparse import parse_date
 
@@ -86,6 +83,13 @@ def cio_dashboard(request):
     }
 
     return render(request, "rideshareapp/cio_dashboard.html", context)
+
+def dismiss_welcome(request):
+    profile = request.user.profile
+    profile.onboarded = True
+    profile.save()
+
+    return redirect('index')
 
 def report_message(request):
     if request.method != "POST":

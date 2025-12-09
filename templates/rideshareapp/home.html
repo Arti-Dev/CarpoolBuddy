@@ -5,6 +5,33 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 {% endblock %}
 {% block content %}
+{% if user.is_authenticated and not user.profile.onboarded %}
+<div class="card shadow-sm mb-4 p-3 bg-light">
+    <h2>Welcome to Carpool Buddy!</h2>
+    <p>Here’s a quick guide to help you get started:</p>
+
+    <h5>Community Norms</h5>
+    <ul>
+        <li>Be respectful and courteous to all users.</li>
+        <li>Provide accurate and honest ride details.</li>
+        <li>Be on time and communicative.</li>
+        <li>Respect privacy and safety of all riders.</li>
+    </ul>
+
+    <h5>What you can do</h5>
+    <ul>
+        <li>Join a CIO — click “Join CIO → Go” to join a group that fits your interests</li>
+        <li>Find or post rides (start location, destination, time, number of riders)</li>
+        <li>Message other users via Chat/Messaging to coordinate rides</li>
+        <li>Customize your profile — add nickname, bio, profile pic so others recognize you</li>
+    </ul>
+    <!-- Asked chat to help move organize spacing of buttons -->
+    <div class="d-flex gap-2">
+        <a href="{% url 'dismiss-welcome' %}" class="btn btn-primary">Got it</a>
+        <a href="{% url 'accounts:profile_edit' %}" class="btn btn-secondary">Set up profile now</a>
+    </div>
+</div>
+{% endif %}
 {% if messages %}
     {% for message in messages %}
         <div class="alert alert-info">{{ message }}</div>

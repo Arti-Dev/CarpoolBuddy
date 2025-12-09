@@ -34,7 +34,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ocydeh5ofpnwv4de&+1&3(d#&!8f6kz8(fdf&zjzbt^ditd=&7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("debug", False)
+DEBUG = os.environ.get("debug", True)
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
