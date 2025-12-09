@@ -108,7 +108,7 @@
             reportLink.onclick = function() {
                 const reason = prompt("Why are you reporting this message?");
                 if (reason) {
-                    fetch("{% url 'start-chat' %}", {
+                    fetch("{% url 'report-message' %}", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded",
@@ -117,16 +117,16 @@
                         body: new URLSearchParams({
                             room_id: roomID,
                             message: data.message,
-                            username: data.username,
-                            computing_id: data.computing_id,
+                            message_author_username: data.username,
+                            message_author_computing_id: data.computing_id,
                             reason: reason
                         })
-                    }).then(response => {
-                        alert("room_id: " + roomID + ", message: " + data.message + ", username: " + data.username + ", computingid: " + data.computing_id + ", reason: " + reason);
+                    }).then(async response => {
                         if (response.ok) {
                             alert("Thank you for reporting this content. Someone will review it shortly!");
                         } else {
-                            alert("Something went wrong when trying to report this message!");
+                            const errorText = await response.text();
+                            alert("Something went wrong when trying to report this message: " + errorText);
                         }
                     });
                 }
@@ -165,7 +165,6 @@
             const username = "{{ user.profile.get_display_name }}";
             const roomID = "{{ room_id }}";
             const computingID = "{{ user.profile.computing_id }}";
-            console.log(roomID)
             chatSocket.send(JSON.stringify({
                 'message': message,
                 'username': username,

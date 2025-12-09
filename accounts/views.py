@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.http import HttpResponseForbidden, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -14,12 +15,17 @@ def profile(request, user_id):
     else:
         profile_user = get_object_or_404(User, pk=user_id)
 
-    # Get profile object
+    if request.user.groups.filter(name='Moderator').exists():
+        is_moderator = True
+    else:
+        is_moderator = False
 
 
     #add posts so that a users posts can be seen on profile page
     posts = Post.objects.filter(author=profile_user).order_by('-created_at')
-    return render(request, 'account/profile.html', {"profile_user":profile_user, "posts":posts})
+    return render(request, 'account/profile.html', {"profile_user":profile_user,
+                                                    "posts":posts,
+                                                    "is_moderator": is_moderator})
 
 @login_required
 def profile_self(request):
@@ -39,3 +45,38 @@ def profile_edit(request):
         user_update_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)
     return render(request, "account/profileedit.html", {"user_update_form": user_update_form, "profile_form": profile_form})
+
+
+@login_required
+def ban_user(request):
+    # Permission check
+    # Maybe I shouldn't hardcode Moderator. Oh well.
+    if not request.user.groups.filter(name='Moderator').exists():
+        return HttpResponseForbidden("You don't have permission!")
+
+    if request.method != "POST":
+        return HttpResponseBadRequest("Invalid request")
+
+    user_id = request.POST.get("user_id", "").strip()
+    action = request.POST.get("action", "").strip()
+
+    # Prevent a moderator from banning themselves
+    if str(request.user.id) == user_id:
+        messages.error(request, "Yeah, don't ban yourself.")
+        return redirect("accounts:profile", user_id=request.user.id)
+
+    target_user = get_object_or_404(User, id=user_id)
+
+    if action == "ban":
+        target_user.is_active = False
+        target_user.save()
+        messages.success(request, f"User {target_user.username} has been banned.")
+        return redirect("accounts:profile", user_id=target_user.id)
+    elif action == "unban":
+        target_user.is_active = True
+        target_user.save()
+        messages.success(request, f"User {target_user.username} has been unbanned.")
+        return redirect("accounts:profile", user_id=target_user.id)
+    else:
+        messages.error(request, "Invalid action.")
+        return redirect("accounts:profile", user_id=target_user.id)

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block extra_style %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+{% endblock %}
+{# Mostly copied from home.html and adapted. #}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    <h1>Flagged Posts</h1>
+    <br>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for report in reports %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+
+                    <!-- Three-dots menu -->
+                    <div class="dropdown position-absolute top-0 end-0 m-1">
+                        <button class="btn btn-link text-dark p-0" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-three-dots-vertical fs-5"></i>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'posts:post_edit' report.post.id %}">Edit</a></li>
+
+                            <li><form method="post" action="{% url 'resolve-flagged-post' %}">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        name="report_id"
+                                        value="{{ report.id }}"
+                                        class="dropdown-item text-success">
+                                    Resolve
+                                </button>
+                            </form></li>
+
+                            <li><a class="dropdown-item text-danger" href="{% url 'posts:post_delete' report.post.id %}">Delete</a></li>
+                        </ul>
+                    </div>
+
+                    {% if report.post.photo %}
+                        <img src="{{ report.post.photo.url }}" class="card-img-top" alt="Post photo">
+                        {% else %}
+                        <p>No image</p>
+                    {% endif %}
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">
+                            {{ report.post.start_location }} to {{ report.post.end_location }}
+                        </h5>
+                        <p class="card-text mb-2">
+                            <strong>Departure:</strong> {{ report.post.departure_time|date:"M d, Y h:i A" }}<br>
+                            <strong>Riders:</strong> {{ report.post.num_riders }}
+                        </p>
+                        {% if report.post.description %}
+                            <p class="card-text flex-grow-1">{{ report.post.description|truncatewords:25 }}</p>
+                        {% endif %}
+                        {% if report.post.incentive %}
+                            <p class="card-text flex-grow-1">{{ report.post.incentive|truncatewords:25 }}</p>
+                        {% endif %}
+                        <small class="text-muted mt-auto">
+                            <!-- Asked ChatGPT to generate this <a> tag -->
+                            <a href="{% url 'accounts:profile' report.post.author.id %}" style="color: inherit;">
+                            <!--asked chat to write me code that would add the user's profile photo, modified to reflect our URLS on 12/8/25-->
+                            {% if report.post.author.profile.image %}
+                                <img src="{{ report.post.author.profile.image.url }}" alt="Profile photo" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; margin-right: 6px;">
+                            {% endif %}
+                            {% if report.post.author.profile.computing_id %}
+                            Posted by {{ report.post.author_display_name }} ({{ report.post.author.profile.computing_id }}) on {{ report.post.created_at|date:"M d, Y" }}
+                            {% else %}
+                            Posted by {{ report.post.author_display_name }} on {{ report.post.created_at|date:"M d, Y" }}
+                            {% endif %}
+                            </a>
+
+                        </small>
+
+                        <p><b>Report reason:</b> {{ report.reason }}</p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+                <p class="text-muted text-center">There are no flagged posts.</p>
+            {% endfor %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+{% endblock %}
