@@ -89,7 +89,12 @@
                             {% if post.author.profile.image %}
                                 <img src="{{ post.author.profile.image.url }}" alt="Profile photo" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; margin-right: 6px;">
                             {% endif %}
+                            {% if post.author.profile.computing_id %}
+                            Posted by {{ post.author_display_name }} ({{ post.author.profile.computing_id }}) on {{ post.created_at|date:"M d, Y" }}
+                            {% else %}
                             Posted by {{ post.author_display_name }} on {{ post.created_at|date:"M d, Y" }}
+                            {% endif %}
+                           
                         </small>
                     </div>
                 </div>
