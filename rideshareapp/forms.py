@@ -11,8 +11,10 @@ class CIOForm(forms.ModelForm):
         # help_text='Optional: e.g. "hey, alice, Bob Smith"',
         widget=forms.Textarea(
             attrs={
+                "rows": 3,                         # height of the box
+                "cols": 30,                        # optional, width
                 "placeholder": "hey, alice, Bob Smith",
-                "rows": 3,
+                "class": "form-control",           # nice Bootstrap styling
             }
         ),
     )
