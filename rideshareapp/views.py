@@ -42,14 +42,6 @@ def index(request):
         return render(request, "rideshareapp/home.html", {"user": request.user, "posts":posts, "cios":cios,})
     else:
         return redirect('/accounts/login')
-
-def moderator(request):
-    if not request.user.is_authenticated:
-        return redirect('/accounts/login')
-    if request.user.groups.filter(name='Moderator').exists():
-        return render(request, 'rideshareapp/moderator.html')
-    else:
-        return HttpResponseForbidden("You don't have permission!")
     
 def admin_dashboard(request):
     return render(request, "rideshareapp/admin_dashboard.html")
