@@ -26,6 +26,9 @@ class Post(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
 
+    #asked chat to help me implement the 0 or 1 CIO set up on 12/9/25
+    cio = models.ForeignKey("rideshareapp.CIO",on_delete=models.SET_NULL,null=True,blank=True,related_name="posts")
+    
     def __str__(self):
         return f"{self.author.username}: {self.start_location} to {self.end_location} at {self.departure_time.strftime('%b %d %I:%M %p')}"
     

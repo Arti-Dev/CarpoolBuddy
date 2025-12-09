@@ -5,7 +5,7 @@ from .models import Post
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['start_location', 'end_location', 'departure_time', 'num_riders', 'description','photo', 'photo_visibility', 'incentive']
+        fields = ['start_location', 'end_location', 'departure_time', 'num_riders', 'description','photo', 'photo_visibility', 'incentive', 'cio']
         widgets = {
             'start_location': forms.TextInput(attrs={'placeholder': 'Where are you starting from?'}),
             'end_location': forms.TextInput(attrs={'placeholder': 'Where are you going?'}),
@@ -13,6 +13,7 @@ class PostForm(forms.ModelForm):
             'num_riders': forms.NumberInput(attrs={'min': 1}),
             'description': forms.Textarea(attrs={'rows': 3}),
             'incentive': forms.Textarea(attrs={'rows': 2}),
+            "cio": forms.Select(attrs={"class": "form-select"}),
         }
 
 

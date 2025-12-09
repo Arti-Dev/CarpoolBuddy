@@ -82,6 +82,8 @@ def cio_dashboard(request):
 
     cio = get_object_or_404(CIO, id=cio_id)
 
+    posts = Post.objects.filter(cio=cio).order_by("-created_at")
+
     # Placeholder members for this CIO
     placeholder_members = cio.placeholder_members.all()  # relies on related_name in model
     # real_members = cio.members.all()
@@ -90,6 +92,7 @@ def cio_dashboard(request):
         "cio": cio,
         "placeholder_members": placeholder_members,
         # "real_members": real_members
+        "posts": posts
     }
 
     return render(request, "rideshareapp/cio_dashboard.html", context)
