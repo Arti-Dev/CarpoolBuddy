@@ -38,6 +38,17 @@
     </form>
     {% endif %}
 
+    <!--asked chatGPT to add a button to delete an account on 12/9/25, modified it to match my urls-->
+    {% if request.user.id == profile_user.id %}
+    <form method="POST" action="{% url 'accounts:delete_account' %}"
+      onsubmit="return confirm('Are you sure you want to permanently delete your account? This cannot be undone.');">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger mt-3">
+        Delete My Account
+    </button>
+    </form>
+    {% endif %}
+
 
 </div>
 </div>

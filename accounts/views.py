@@ -6,6 +6,9 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import UserUpdateForm, ProfileUpdateForm
 from posts.models import Post
+from django.contrib.auth import logout
+from django.contrib.messages import get_messages
+
 
 
 @login_required
@@ -80,3 +83,23 @@ def ban_user(request):
     else:
         messages.error(request, "Invalid action.")
         return redirect("accounts:profile", user_id=target_user.id)
+    
+#asked chatgpt for a delete account method on 12/9/25, i modified it to redirect to the pages i want
+@login_required
+def delete_account(request):
+    if request.method != "POST":
+        return HttpResponseBadRequest("Invalid request")
+
+    user = request.user
+
+    messages.success(request, "Your account has been permanently deleted.")
+
+    #clears the message so "your account has been deleted" isnt still shown if you log in again
+    storage = get_messages(request)
+    for _ in storage:
+        pass  # just iterating clears them
+
+    #log out the user before deleting
+    logout(request)
+    user.delete()
+    return redirect("/") 
