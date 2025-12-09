@@ -66,7 +66,7 @@
             <div class="col">
                 <div class="card h-100 shadow-sm">
 
-                    {% if post.can_view_photo_user %}
+                    {% if post.photo and post.can_view_photo_user %}
                         <img src="{{ post.photo.url }}" class="card-img-top" alt="Post photo">
                     {% endif %}
                     
