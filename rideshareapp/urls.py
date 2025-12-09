@@ -6,6 +6,7 @@ urlpatterns = [
     path('admin-dashboard/', views.admin_dashboard, name='admin-dashboard'),
     path('admin/create-cio/', views.admin_create_cio, name='admin-create-cio'),
     path('cio-dashboard/', views.cio_dashboard, name='cio_dashboard'),
+    path('report-message/', views.report_message, name='report-message'),
     path('dismiss-welcome/', views.dismiss_welcome, name='dismiss-welcome'),
     path('report-message/', views.report_message, name='report-message'),
     path('admin/review-flagged-messages/', views.review_flagged_messages, name='review-flagged-messages'),

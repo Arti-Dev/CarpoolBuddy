@@ -1,21 +1,65 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>CIO Dashboard</h1>
-
   {% if cio %}
-  <h4>Welcome to: <strong>{{ cio.name }}</strong></h4>
+    <!--Asked chat to help me update the formatting of the cio dashboard in the style of home.html-->
+    <!-- Header + summary -->
+    <div class="mb-4">
+      <h1>{{ cio.name }} Dashboard</h1>
+      <p class="lead mb-0">
+      </p>
+    </div>
 
-    <h3>Users in this CIO</h3>
-    <ul>
-      {% for member in placeholder_members %}
-        <li>{{ member.name }}</li>
-      {% empty %}
-        <li>No users have been added yet.</li>
-      {% endfor %}
-    </ul>
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body text-center">
+            <h6 class="text-uppercase text-muted mb-2">Total Members</h6>
+            <h2 class="mb-0">
+              {{ placeholder_members|length }}
+            </h2>
+          </div>
+        </div>
+      </div>
 
+    <!-- Members list -->
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h3 class="h4 mb-3">Members</h3>
+
+        {% if placeholder_members %}
+          <ul class="list-group list-group-flush">
+            {% for member in placeholder_members %}
+              <li class="list-group-item d-flex align-items-center">
+                <!-- Simple avatar circle with first letter -->
+                <div
+                  class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
+                  style="width: 32px; height: 32px; font-size: 0.9rem;"
+                >
+                  {{ member.name|first|upper }}
+                </div>
+                <span>{{ member.name }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="mb-0 text-muted">No members have been added yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  
   {% else %}
-    <p>No CIO selected. Please go back and choose one from the home page.</p>
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h1 class="h3 mb-3">CIO Dashboard</h1>
+        <p class="mb-2">No CIO selected.</p>
+        <p class="text-muted mb-3">
+          Please choose a CIO from the dropdown in the top-right and click <strong>Go</strong>.
+        </p>
+        <a href="{% url 'index' %}" class="btn btn-primary">
+          Back to Home
+        </a>
+      </div>
+    </div>
   {% endif %}
 {% endblock %}
