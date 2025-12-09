@@ -11,9 +11,11 @@ from project.storage_backend import ChatStorage
 
 # Create your views here.
 
+@login_required
 def index(request):
     return render(request, "chat/index.html")
 
+@login_required
 def room_view(request, room_id):
     try:
         room_id = int(room_id)
@@ -32,7 +34,7 @@ def room_view(request, room_id):
                   {"room_id": room.id,
                    "room_title": room.title,
                    "messages": messages})
-
+@login_required
 def start_chat(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Invalid request")
@@ -60,6 +62,7 @@ def start_chat(request):
 
     return JsonResponse({"room_id": room.id})
 
+@login_required()
 def start_group_chat(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Invalid request")
