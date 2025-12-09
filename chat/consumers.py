@@ -32,31 +32,35 @@ class ChatConsumer(WebsocketConsumer):
         message = text_data_json["message"]
         username = text_data_json["username"]
         room_id = text_data_json["room_id"]
+        computing_id = text_data_json.get("computing_id", "")
 
         # Save message to S3
-        save_message_to_s3(room_id, username, message)
+        save_message_to_s3(room_id, username, computing_id, message)
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name, {"type": "chat.message",
                                    "message": message,
-                                   "username": username}
+                                   "username": username,
+                                   "computing_id": computing_id}
         )
 
     # Receive message from room group
     def chat_message(self, event):
         message = event["message"]
         username = event["username"]
+        computing_id = event["computing_id"]
 
         # Send message to WebSocket
-        self.send(text_data=json.dumps({"message": message, "username": username}))
+        self.send(text_data=json.dumps({"message": message, "username": username, "computing_id": computing_id}))
 
-def save_message_to_s3(room: int, username, message):
+def save_message_to_s3(room: int, username, computing_id, message):
     storage = ChatStorage()
 
     data = {
         "room": room,
         "username": username,
+        "computing_id": computing_id,
         "message": message,
         "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
     }
