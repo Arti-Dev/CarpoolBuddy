@@ -1,11 +1,17 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest
+from django.utils.dateparse import parse_date
+
+from chat.models import ChatRoom
 from posts.models import Post
 from django.contrib import messages
 from .forms import CIOForm
-from .models import CIO, CIOPlaceholderMember
+from .models import CIO, CIOPlaceholderMember, ReportedMessage, ReportedPost
 from django.shortcuts import render, redirect, get_object_or_404
+from accounts.models import Profile
 
 
 # SHERRIFF: very basic index page created
@@ -54,12 +60,6 @@ def moderator(request):
 def admin_dashboard(request):
     return render(request, "rideshareapp/admin_dashboard.html")
 
-def admin_add_user(request):
-    return render(request, "rideshareapp/admin_add_user.html")
-
-def admin_my_groups(request):
-    return render(request, "rideshareapp/admin_my_groups.html")
-
 def admin_create_cio(request):
     if request.method == 'POST':
         form = CIOForm(request.POST)
@@ -94,3 +94,98 @@ def cio_dashboard(request):
     }
 
     return render(request, "rideshareapp/cio_dashboard.html", context)
+
+def report_message(request):
+    if request.method != "POST":
+        return HttpResponseBadRequest("Invalid request")
+
+    message = request.POST.get("message", "").strip()
+    room_id = request.POST.get("room_id", "").strip()
+    reason = request.POST.get("reason", "").strip()
+    message_author_computing_id = request.POST.get("message_author_computing_id", "").strip()
+
+    # Find corresponding profile
+    try:
+        message_author_profile = Profile.objects.get(
+            computing_id=message_author_computing_id,
+        )
+    except Profile.DoesNotExist:
+        return HttpResponseBadRequest("Invalid message author")
+
+    # Get the user corresponding to the profile
+    message_author_user = message_author_profile.user
+
+    if not message or not room_id:
+        return HttpResponseBadRequest("Invalid report data")
+
+    chatroom = ChatRoom.objects.get(id=room_id)
+    title = chatroom.title
+
+    ReportedMessage.objects.create(
+        message=message,
+        room=title,
+        message_author_user=message_author_user,
+        reason=reason)
+
+    return HttpResponse("Reported message successfully")
+
+@login_required
+def review_flagged_messages(request):
+    reports = ReportedMessage.objects.all()
+    return render(request, "rideshareapp/review_flagged_messages.html", {"reports": reports})
+
+def resolve_flagged_message(request):
+    if request.method != "POST":
+        return HttpResponseBadRequest("Invalid request")
+
+    report_id = request.POST.get("report_id", "").strip()
+
+    try:
+        report = ReportedMessage.objects.get(id=report_id)
+    except ReportedMessage.DoesNotExist:
+        messages.error(request, f"Report id {report_id} does not exist.")
+        return redirect('/rideshareapp/admin/review-flagged-messages/')
+
+    report.delete()
+
+    messages.success(request, "Reported message has been resolved.")
+    return redirect('/rideshareapp/admin/review-flagged-messages/')
+
+@login_required
+def review_flagged_posts(request):
+    reports = ReportedPost.objects.all()
+    return render(request, "rideshareapp/review_flagged_posts.html", {"reports": reports})
+
+def report_post(request):
+    if request.method != "POST":
+        return HttpResponseBadRequest("Invalid request")
+
+    post_id = request.POST.get("post_id", "").strip()
+    reason = request.POST.get("reason", "").strip()
+
+    post = get_object_or_404(Post, id=post_id)
+
+    ReportedPost.objects.create(
+        post=post,
+        reason=reason
+    )
+    messages.success(request, "Post reported successfully.")
+    return redirect('index')
+
+@login_required
+def resolve_flagged_post(request):
+    if request.method != "POST":
+        return HttpResponseBadRequest("Invalid request")
+
+    report_id = request.POST.get("report_id", "").strip()
+
+    try:
+        report = ReportedPost.objects.get(id=report_id)
+    except ReportedPost.DoesNotExist:
+        messages.error(request, f"Report id {report_id} does not exist.")
+        return redirect('/rideshareapp/admin/review-flagged-posts/')
+
+    report.delete()
+
+    messages.success(request, "Reported post has been resolved.")
+    return redirect('/rideshareapp/admin/review-flagged-posts/')

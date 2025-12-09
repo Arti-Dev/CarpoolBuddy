@@ -2,6 +2,11 @@
 
 {% block content %}
 <div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
     <div class="media">
     <img class="rounded-circle account-img" src="{{ profile_user.profile.image.url }}"  width="155" height="155">
     <div class="media-body">
@@ -14,6 +19,23 @@
     <p><strong>Sustainability Interests:</strong> {{ profile_user.profile.sustainability_interests }}</p>
     {% if request.user == profile_user %}
         <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary">Edit Profile</a>
+    {% endif %}
+    <!-- Asked ChatGPT to generate a button on profiles that only users in the group "Moderator" can see, and that sends a request to the view /accounts/ban-user -->
+    {% if is_moderator %}
+    <form method="POST" action="{% url 'accounts:ban_user' %}" style="display: inline;">
+        {% csrf_token %}
+        <input type="hidden" name="user_id" value="{{ profile_user.id }}">
+
+        {% if profile_user.is_active %}
+            <button type="submit" name="action" value="ban" class="btn btn-danger">
+                Ban User
+            </button>
+        {% else %}
+            <button type="submit" name="action" value="unban" class="btn btn-success">
+                Unban User
+            </button>
+        {% endif %}
+    </form>
     {% endif %}
 
 

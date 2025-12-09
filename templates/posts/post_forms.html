@@ -2,13 +2,21 @@
 {% block title %}Create Post{% endblock %}
 
 {% block content %}
-  <h2>Create a new ride post</h2>
+    {% if post %}
+    <h2>Edit ride post</h2>
+    {% else %}
+    <h2>Create a new ride post</h2>
+    {% endif %}
 
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
     <!--renders form automatically-->
     {{ form.as_p }}
+    {% if post %}
+    <button type="submit">Update</button>
+    {% else %}
     <button type="submit">Create</button>
+    {% endif %}
   </form>
 {% endblock %}
