@@ -59,7 +59,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'rideshareapp',
     'storages',
-    'notifications',
 
     #used chat to fix this line on 10/15/25
     #needed to specify accountsconfig so that signal to create user object was sent on login
