@@ -8,3 +8,8 @@ class MediaStorage(S3Boto3Storage):
     location = "media"
     default_acl = None         
     file_overwrite = False
+
+class ChatStorage(S3Boto3Storage):
+    location = "chat"
+    default_acl = None
+    file_overwrite = False

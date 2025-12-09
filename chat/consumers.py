@@ -2,6 +2,10 @@ import json
 
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from datetime import datetime
+from datetime import timezone
+from django.core.files.base import ContentFile
+from project.storage_backend import ChatStorage
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -26,15 +30,39 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
+        username = text_data_json["username"]
+        room_id = text_data_json["room_id"]
+
+        # Save message to S3
+        save_message_to_s3(room_id, username, message)
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name, {"type": "chat.message", "message": message}
+            self.room_group_name, {"type": "chat.message",
+                                   "message": message,
+                                   "username": username}
         )
 
     # Receive message from room group
     def chat_message(self, event):
         message = event["message"]
+        username = event["username"]
 
         # Send message to WebSocket
-        self.send(text_data=json.dumps({"message": message}))
+        self.send(text_data=json.dumps({"message": message, "username": username}))
+
+def save_message_to_s3(room: int, username, message):
+    storage = ChatStorage()
+
+    data = {
+        "room": room,
+        "username": username,
+        "message": message,
+        "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
+    }
+
+    filename = f"{str(room)}/{datetime.now(timezone.utc).timestamp()}.json"
+    content = ContentFile(json.dumps(data).encode("utf-8"))
+
+    path = storage.save(filename, content)
+    return path

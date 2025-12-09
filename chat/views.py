@@ -6,6 +6,7 @@ from django.shortcuts import render, get_object_or_404
 
 from accounts.models import Profile
 from chat.models import ChatRoom, ChatAccess
+from project.storage_backend import ChatStorage
 
 
 # Create your views here.
@@ -25,9 +26,12 @@ def room_view(request, room_id):
     if not has_access:
         return HttpResponseForbidden("You do not have access to this room.")
 
+    messages = load_messages_from_s3(room_id)
+
     return render(request, "chat/room.html",
                   {"room_id": room.id,
-                   "room_title": room.title})
+                   "room_title": room.title,
+                   "messages": messages})
 
 def start_chat(request):
     if request.method != "POST":
@@ -93,3 +97,13 @@ def validate_other_user(request):
     else:
         return JsonResponse({"valid": False, "error": f"Could not find a user by computing id {computing_id}"}, status=400)
 
+def load_messages_from_s3(room: int):
+    storage = ChatStorage()
+    files = storage.listdir(str(room))[1]
+
+    messages = []
+    for file in files:
+        content = storage.open(f"{str(room)}/{file}").read()
+        messages.append(json.loads(content))
+
+    return sorted(messages, key=lambda x: x["timestamp"])
