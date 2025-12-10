@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Post
 from .forms import PostForm, DriverReviewForm
+from django.contrib.auth.models import User
 
 @login_required
 def post_create(request):
