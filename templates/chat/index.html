@@ -21,7 +21,12 @@
 <h1>Chat Rooms</h1>
 <br>
 {% for room in user.profile.get_accessible_rooms %}
-    <button onclick="window.location.href='{% url 'room' room_id=room.id %}'">{{ room.title }}</button><br>
+    <button onclick="window.location.href='{% url 'room' room_id=room.id %}'">
+        {{ room.title }}
+        {% if room.id in unread_rooms %}
+            <span style="color:red; font-weight:bold;">•</span>
+        {% endif %}
+    </button><br>
 {% empty %}
     <li>No rooms</li>
 {% endfor %}

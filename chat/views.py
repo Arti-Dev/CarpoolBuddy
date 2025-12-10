@@ -1,11 +1,13 @@
 import json
 
+from django.shortcuts import redirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest, JsonResponse, HttpResponseForbidden, Http404
 from django.shortcuts import render, get_object_or_404
 
 from accounts.models import Profile
-from chat.models import ChatRoom, ChatAccess
+from chat.models import ChatRoom, ChatAccess, RoomUnread
 from project.storage_backend import ChatStorage
 
 
@@ -13,7 +15,17 @@ from project.storage_backend import ChatStorage
 
 @login_required
 def index(request):
-    return render(request, "chat/index.html")
+    profile = request.user.profile
+
+    if profile.computing_id is None or profile.computing_id.strip() == "":
+        messages.error(request, "Please set a computing ID before using messaging.")
+        return redirect('/accounts/profileedit')
+
+    unread_rooms = set(RoomUnread.objects.filter(profile=profile).values_list('room_id', flat=True))
+
+    return render(request, "chat/index.html", {
+        "unread_rooms": unread_rooms,
+    })
 
 @login_required
 def room_view(request, room_id):

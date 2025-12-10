@@ -30,3 +30,7 @@ class Profile(models.Model):
         if self.nickname and self.nickname.strip():
             return self.nickname
         return self.user.first_name
+
+    def has_unread_messages(self):
+        from chat.models import RoomUnread
+        return RoomUnread.objects.filter(profile=self).exists()
