@@ -85,26 +85,30 @@
         {% else %}
             <p class="text-muted text-center">No posts yet. You should make one!</p>
         {% endif %}
-
-        <!-- Asked ChatGPT to generate place on profile where users can see and leave review  -->
-        <h3>Reviews</h3>
-
-        {% for r in profile_user.reviews_received.all %}
-            <p><strong>{{ r.reviewer.profile.get_display_name }}</strong> said:</p>
-            <p>{{ r.comment }}</p>
-            <hr>
-        {% empty %}
-            <p>No reviews yet.</p>
-        {% endfor %}
-        
-        {% if request.user != profile_user %}
-            <a class="btn btn-secondary" href="{% url 'posts:leave_review' profile_user.id %}">
-                Leave a Review
-            </a>
-        {% endif %}
         
 
     </div>
+<!-- Asked ChatGPT to generate place on profile where users can see and leave review  -->
+<h3 class="mt-4">Reviews</h3>
 
-   
+{% if profile_user.reviews_received.all %}
+    <ul class="list-group mb-3">
+        {% for r in profile_user.reviews_received.all %}
+            <li class="list-group-item">
+                <strong>{{ r.reviewer.profile.get_display_name }}</strong> said:
+                <p class="mb-1">{{ r.comment }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="text-muted">No reviews yet.</p>
+{% endif %}
+
+{% if request.user != profile_user %}
+    <a class="btn btn-secondary"
+       href="{% url 'posts:leave_review' profile_user.id %}">
+        Leave a Review
+    </a>
+{% endif %}
+
 {% endblock %}
