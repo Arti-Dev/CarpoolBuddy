@@ -83,16 +83,16 @@ def post_signup(request, post_id):
 
     if request.user == post.author:
         messages.error(request, "You cannot sign up for your own ride.")
-        return redirect("home")
+        return redirect("index")
 
     if post.is_full:
         messages.error(request, "This ride is full.")
-        return redirect("home")
+        return redirect("index")
 
     if request.user in post.passengers.all():
         messages.info(request, "You are already signed up for this ride.")
-        return redirect("home")
+        return redirect("index")
 
     post.passengers.add(request.user)
     messages.success(request, f"You have signed up for the ride from {post.start_location} to {post.end_location}!")
-    return redirect("home")
+    return redirect("index")
