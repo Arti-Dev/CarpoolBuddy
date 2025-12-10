@@ -22,6 +22,7 @@
     <ul>
         <li>Join a CIO — click “Join CIO → Go” to join a group that fits your interests</li>
         <li>Find or post rides (start location, destination, time, number of riders)</li>
+        <li>View a driver's reviews by selecting their name </li>
         <li>Message other users via Chat/Messaging to coordinate rides</li>
         <li>Customize your profile — add nickname, bio, profile pic so others recognize you</li>
     </ul>
@@ -143,7 +144,7 @@
                             <p class="card-text flex-grow-1">{{ post.incentive|truncatewords:25 }}</p>
                         {% endif %}
                         <p class="card-text">
-                            <strong>Passengers:</strong> {{ post.current_passengers_count }}
+                            <strong>Current Passengers:</strong> {{ post.current_passengers_count }}
                             <br>
                             <strong>Seats left:</strong> {{ post.seats_left }}
                         </p>
