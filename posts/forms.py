@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from .models import Post
+from .models import Post, DriverReview
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -32,3 +32,8 @@ class PostForm(forms.ModelForm):
         if dep <= timezone.now():
             raise forms.ValidationError("Departure time must be in the future.")
         return dep
+
+class DriverReviewForm(forms.ModelForm):
+    class Meta:
+        model = DriverReview
+        fields = ["comment"]

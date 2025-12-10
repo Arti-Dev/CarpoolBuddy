@@ -43,4 +43,12 @@ class Post(models.Model):
         if user == self.author:
             return True
         return False
+# asked chatGPT to make a driverreview function on 12/9/25 and modified slightly
+class DriverReview(models.Model):
+    driver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews_received")
+    reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"Review for {self.driver.username} by {self.reviewer.username}"

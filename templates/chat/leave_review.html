@@ -1,0 +1,13 @@
+<!-- Asked ChatGPT to generate this form on to allow users to leave a review on 12/9/25 -->
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Leave a review for {{ driver.profile.get_display_name }}</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+</form>
+
+{% endblock %}

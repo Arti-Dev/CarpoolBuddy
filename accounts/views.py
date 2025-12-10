@@ -13,10 +13,10 @@ from django.contrib.messages import get_messages
 
 @login_required
 def profile(request, user_id):
-    if user_id is None: # Viewing own profile
+    if user_id is None:
         profile_user = request.user
     else:
-        profile_user = get_object_or_404(User, pk=user_id)
+        profile_user = get_object_or_404(User, id=user_id)
 
     if request.user.groups.filter(name='Moderator').exists():
         is_moderator = True
@@ -34,6 +34,8 @@ def profile(request, user_id):
 def profile_self(request):
     return profile(request, request.user.id)
 
+
+
 @login_required
 def profile_edit(request):
     if request.method == "POST":
@@ -47,6 +49,7 @@ def profile_edit(request):
     else:
         user_update_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)
+
     return render(request, "account/profileedit.html", {"user_update_form": user_update_form, "profile_form": profile_form})
 
 

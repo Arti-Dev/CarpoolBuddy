@@ -85,6 +85,25 @@
         {% else %}
             <p class="text-muted text-center">No posts yet. You should make one!</p>
         {% endif %}
+
+        <!-- Asked ChatGPT to generate place on profile where users can see and leave review  -->
+        <h3>Reviews</h3>
+
+        {% for r in profile_user.reviews_received.all %}
+            <p><strong>{{ r.reviewer.profile.get_display_name }}</strong> said:</p>
+            <p>{{ r.comment }}</p>
+            <hr>
+        {% empty %}
+            <p>No reviews yet.</p>
+        {% endfor %}
+        
+        {% if request.user != profile_user %}
+            <a class="btn btn-secondary" href="{% url 'posts:leave_review' profile_user.id %}">
+                Leave a Review
+            </a>
+        {% endif %}
+        
+
     </div>
 
    
