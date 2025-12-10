@@ -73,7 +73,7 @@
                     <li class="nav-item me-3">
                         {% if user.profile.has_unread_messages %}
                         <a class="nav-link position-relative" href="{% url 'chatindex' %}" title="You have unread messages">
-                            <i class="bi bi-envelope-fill fs-5 text-danger"></i>
+                            <i class="bi bi-envelope-fill fs-5 text-primary"></i>
                         </a>
                         {% else %}
                         <a class="nav-link position-relative" href="{% url 'chatindex' %}" title="Message Inbox">
