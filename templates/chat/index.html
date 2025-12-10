@@ -15,33 +15,46 @@
     }
     </style>
 {% endblock %}
+
 {% block title %}Chat Rooms{% endblock %}
 
 {% block content %}
-<h1>Chat Rooms</h1>
-<br>
-{% for room in user.profile.get_accessible_rooms %}
-    <button onclick="window.location.href='{% url 'room' room_id=room.id %}'">
-        {{ room.title }}
-        {% if room.id in unread_rooms %}
-            <span style="color:red; font-weight:bold;">•</span>
-        {% endif %}
-    </button><br>
-{% empty %}
-    <li>No rooms</li>
-{% endfor %}
-<br><br>
-Or start a chat by entering someone else's computing ID:<br>
-<input id="computing-id" type="text" size="10"><br>
-<input id="computing-id-submit" type="button" value="Enter">
-<br><br>
-Or create a group conversation:<br>
-<input id="gc-computing-id" type="text" size="10"><br>
-<input id="add-user" type="button"  value="Add User"><br>
-<div class="gc-id-list" id="gc-id-list">
-    <!-- List of added computing IDs will appear here -->
+<div class="container my-5">
+        <h1>Chat Rooms</h1>
+        <br>
+        {% for room in user.profile.get_accessible_rooms %}
+            <a href="{% url 'room' room_id=room.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                {{ room.title }}
+                {% if room.id in unread_rooms %}
+                    <span class="badge bg-danger rounded-pill">&bull;</span>
+                {% endif %}
+            </a>
+        {% empty %}
+            <div class="text-muted">No rooms available.</div>
+        {% endfor %}
+    </div>
+
+    <div class="card shadow-sm mb-4 p-3">
+        <h5>Start a chat with someone</h5>
+        <div class="input-group mt-2">
+            <input id="computing-id" type="text" class="form-control" placeholder="Enter computing ID">
+            <button id="computing-id-submit" class="btn btn-primary">Enter</button>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4 p-3">
+        <h5>Create a group conversation</h5>
+        <div class="input-group mt-2 mb-2">
+            <input id="gc-computing-id" type="text" class="form-control" placeholder="Add computing ID"><br>
+            <button id="add-user" class="btn btn-secondary">Add User</button>
+        </div>
+        <div id="gc-id-list" class="mb-2">
+            <!-- List of added computing IDs will appear here -->
+        </div>
+        <button id="create-gc" class="btn btn-success w-100">Create Group Chat</button>
+    </div>
 </div>
-<input id="create-gc" type="button" value="Create Group Chat">
+
 <script>
     document.querySelector('#computing-id').focus();
     document.querySelector('#computing-id').onkeyup = function(e) {

@@ -135,7 +135,6 @@
                         </h5>
                         <p class="card-text mb-2">
                             <strong>Departure:</strong> {{ post.departure_time|date:"M d, Y h:i A" }}<br>
-                            <strong>Passengers:</strong> {{ post.num_riders }}
                         </p>
                         {% if post.description %}
                             <p class="card-text flex-grow-1">{{ post.description|truncatewords:25 }}</p>
