@@ -7,4 +7,5 @@ urlpatterns = [
     path('edit/<int:post_id>/', views.post_edit, name='post_edit'),
     path('delete/<int:post_id>/', views.post_delete, name='post_delete'),
     path("review/<int:driver_id>/", views.leave_review, name="leave_review"),
+    path("signup/<int:post_id>/", views.post_signup, name="post_signup")
 ]

@@ -75,3 +75,24 @@ def leave_review(request, driver_id):
         form = DriverReviewForm()
 
     return render(request, "posts/leave_review.html", {"form": form, "driver": driver})
+
+@login_required
+def post_signup(request, post_id):
+    # Copied from L46 and Asked ChatGpt-5 to explain how it works 12/9/2025
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.user == post.author:
+        messages.error(request, "You cannot sign up for your own ride.")
+        return redirect("home")
+
+    if post.is_full:
+        messages.error(request, "This ride is full.")
+        return redirect("home")
+
+    if request.user in post.passengers.all():
+        messages.info(request, "You are already signed up for this ride.")
+        return redirect("home")
+
+    post.passengers.add(request.user)
+    messages.success(request, f"You have signed up for the ride from {post.start_location} to {post.end_location}!")
+    return redirect("home")

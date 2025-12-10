@@ -13,6 +13,8 @@ class Post(models.Model):
     end_location = models.CharField(max_length=100)
     departure_time = models.DateTimeField()
     num_riders = models.PositiveIntegerField(default=1)
+    passengers = models.ManyToManyField(User, related_name='joined_rides', blank=True)
+
     photo = models.ImageField(upload_to="post_photos/", null=True, blank=True)
 
     photo_visibility = models.CharField(
@@ -52,3 +54,15 @@ class DriverReview(models.Model):
 
     def __str__(self):
         return f"Review for {self.driver.username} by {self.reviewer.username}"
+
+    @property
+    def current_passengers_count(self):
+        return self.passengers.count()
+
+    @property
+    def seats_left(self):
+        return max(0, self.num_riders - self.current_passengers_count)
+
+    @property
+    def is_full(self):
+        return self.seats_left <= 0
