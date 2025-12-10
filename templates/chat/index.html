@@ -1,6 +1,7 @@
 <!-- chat/templates/chat/index.html -->
 {% extends "base.html" %}
 {% block extra_style %}
+<!--Asked chatgpt for help with ui design 12/9/2025 -->
     <style>
     .user-item {
         display: inline-block;
@@ -12,6 +13,15 @@
     }
     .user-item:hover {
         background-color: #d0d0d0;
+    }
+
+    .list-group-item {
+        text-decoration: underline;
+    }
+
+    .list-group-item:hover {
+        text-decoration: none;
+        background-color: #f0f0f0;
     }
     </style>
 {% endblock %}
