@@ -70,11 +70,26 @@
                         </h5>
                         <p class="card-text mb-2">
                             <strong>Departure:</strong> {{ post.departure_time|date:"M d, Y h:i A" }}<br>
-                            <strong>Riders:</strong> {{ post.num_riders }}
+                            <strong>Passengers:</strong> {{ post.num_riders }}
                         </p>
                         {% if post.description %}
                             <p class="card-text flex-grow-1">{{ post.description|truncatewords:25 }}</p>
                         {% endif %}
+                        {% if user.is_authenticated %}
+                            {% if user == post.author %}
+                                <p><strong>Your passengers:</strong></p>
+                                {% if post.passengers.all %}
+                                    <ul class="ps-3">
+                                        {% for passenger in post.passengers.all %}
+                                        <li>{{ passenger.profile.get_display_name }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p>No one has signed up yet.</p>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+
                         <small class="text-muted mt-auto">
                             Posted by {{ post.author_display_name }} on {{ post.created_at|date:"M d, Y" }}
                         </small>
