@@ -55,11 +55,18 @@ def index(request):
         return render(request, "rideshareapp/home.html", {"user": request.user, "posts":posts, "cios":cios,})
     else:
         return redirect('/accounts/login')
-    
-def admin_dashboard(request):
-    return render(request, "rideshareapp/admin_dashboard.html")
 
+@login_required
+def admin_dashboard(request):
+    if request.user.groups.filter(name='Moderator').exists():
+        return render(request, "rideshareapp/admin_dashboard.html")
+    else:
+        return HttpResponseForbidden("You do not have permission to access this page.")
+
+@login_required
 def admin_create_cio(request):
+    if not request.user.groups.filter(name='Moderator').exists():
+        return HttpResponseForbidden("You do not have permission to access this page.")
     if request.method == 'POST':
         form = CIOForm(request.POST)
         if form.is_valid():
@@ -140,10 +147,15 @@ def report_message(request):
 
 @login_required
 def review_flagged_messages(request):
+    if not request.user.groups.filter(name='Moderator').exists():
+        return HttpResponseForbidden("You do not have permission to access this page.")
     reports = ReportedMessage.objects.all()
     return render(request, "rideshareapp/review_flagged_messages.html", {"reports": reports})
 
+@login_required
 def resolve_flagged_message(request):
+    if not request.user.groups.filter(name='Moderator').exists():
+        return HttpResponseForbidden("You do not have permission to access this page.")
     if request.method != "POST":
         return HttpResponseBadRequest("Invalid request")
 
@@ -162,6 +174,8 @@ def resolve_flagged_message(request):
 
 @login_required
 def review_flagged_posts(request):
+    if not request.user.groups.filter(name='Moderator').exists():
+        return HttpResponseForbidden("You do not have permission to access this page.")
     reports = ReportedPost.objects.all()
     return render(request, "rideshareapp/review_flagged_posts.html", {"reports": reports})
 
@@ -185,6 +199,9 @@ def report_post(request):
 def resolve_flagged_post(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Invalid request")
+
+    if not request.user.groups.filter(name='Moderator').exists():
+        return HttpResponseForbidden("You do not have permission to access this page.")
 
     report_id = request.POST.get("report_id", "").strip()
 
