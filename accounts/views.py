@@ -13,10 +13,10 @@ from django.contrib.messages import get_messages
 
 @login_required
 def profile(request, user_id):
-    if user_id is None: # Viewing own profile
+    if user_id is None:
         profile_user = request.user
     else:
-        profile_user = get_object_or_404(User, pk=user_id)
+        profile_user = get_object_or_404(User, id=user_id)
 
     if request.user.groups.filter(name='Moderator').exists():
         is_moderator = True

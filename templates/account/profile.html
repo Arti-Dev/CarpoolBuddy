@@ -85,6 +85,8 @@
         {% else %}
             <p class="text-muted text-center">No posts yet. You should make one!</p>
         {% endif %}
+
+        <!-- Asked ChatGPT to generate place on profile where users can see and leave review  -->
         <h3>Reviews</h3>
 
         {% for r in profile_user.reviews_received.all %}

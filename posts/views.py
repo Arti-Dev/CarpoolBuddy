@@ -53,6 +53,7 @@ def post_delete(request, post_id):
     post.delete()
     messages.success(request, "Post deleted successfully.")
     return redirect('index')
+# asked chatGPT to make a review function on 12/9/25
 @login_required
 def leave_review(request, driver_id):
     driver = get_object_or_404(User, id=driver_id)

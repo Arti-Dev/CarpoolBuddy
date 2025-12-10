@@ -40,7 +40,7 @@ class Post(models.Model):
         if user == self.author:
             return True
         return False
-
+# asked chatGPT to make a driverreview function on 12/9/25 and modified slightly
 class DriverReview(models.Model):
     driver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews_received")
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
