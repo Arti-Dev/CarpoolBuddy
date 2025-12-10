@@ -3,7 +3,7 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Post
-from .forms import PostForm
+from .forms import PostForm, DriverReviewForm
 
 @login_required
 def post_create(request):
@@ -53,3 +53,23 @@ def post_delete(request, post_id):
     post.delete()
     messages.success(request, "Post deleted successfully.")
     return redirect('index')
+@login_required
+def leave_review(request, driver_id):
+    driver = get_object_or_404(User, id=driver_id)
+
+    if driver == request.user:
+        messages.error(request, "You cannot review yourself.")
+        return redirect("accounts:profile", user_id=driver.id)
+
+    if request.method == "POST":
+        form = DriverReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.driver = driver
+            review.reviewer = request.user
+            review.save()
+            return redirect("accounts:profile", user_id=driver.id)
+    else:
+        form = DriverReviewForm()
+
+    return render(request, "posts/leave_review.html", {"form": form, "driver": driver})

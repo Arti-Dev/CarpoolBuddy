@@ -34,6 +34,8 @@ def profile(request, user_id):
 def profile_self(request):
     return profile(request, request.user.id)
 
+
+
 @login_required
 def profile_edit(request):
     if request.method == "POST":
@@ -47,6 +49,7 @@ def profile_edit(request):
     else:
         user_update_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)
+
     return render(request, "account/profileedit.html", {"user_update_form": user_update_form, "profile_form": profile_form})
 
 

@@ -41,3 +41,11 @@ class Post(models.Model):
             return True
         return False
 
+class DriverReview(models.Model):
+    driver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews_received")
+    reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Review for {self.driver.username} by {self.reviewer.username}"
